@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import { getProducts } from '../lib/products'
 
 export const getStaticProps = async () => {
@@ -20,7 +21,11 @@ const HomePage = ({ products }) => {
        <ul>
          {products.map(product => (
            <li key={product.id}>
-             {product.title}
+             <Link href={`/products/${product.id}`}>
+               <a>
+                 {product.title}
+               </a>
+             </Link>
            </li>
          ))}
        </ul>
