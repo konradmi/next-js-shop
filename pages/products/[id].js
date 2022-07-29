@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import { getProduct, getProducts } from '../../lib/products'
+import { ApiError } from '../../lib/api'
 
 export const getStaticPaths = async () => {
   const products = await getProducts()
@@ -23,7 +24,8 @@ export const getStaticProps = async ({ params: { id }}) => {
       revalidate: 5 * 60,
     }
   } catch(e) {
-    return { notFound: true }
+    if(e instanceof ApiError && e.status === 404  ) return { notFound: true }
+    throw e
   }
 }
 
