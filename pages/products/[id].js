@@ -9,16 +9,21 @@ export const getStaticPaths = async () => {
         id: product.id.toString()
       }
     })),
-    fallback: false,
+    fallback: 'blocking',
   }
 }
 
 export const getStaticProps = async ({ params: { id }}) => {
-  const product = await getProduct(id)
-  return {
-    props: {
-      product
+  try {
+    const product = await getProduct(id)
+    return {
+      props: {
+        product
+      },
+      revalidate: 5 * 60,
     }
+  } catch(e) {
+    return { notFound: true }
   }
 }
 
