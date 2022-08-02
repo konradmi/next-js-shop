@@ -1,6 +1,6 @@
-import Head from 'next/head'
-import Link from 'next/link'
 import { getProducts } from '../lib/products'
+import ProductCard from '../components/ProductCard'
+import Page from '../components/Page'
 
 export const getStaticProps = async () => {
   const products = await getProducts()
@@ -12,25 +12,15 @@ export const getStaticProps = async () => {
 
 const HomePage = ({ products }) => {
   return (
-   <>
-     <Head>
-       <title>Next shop</title>
-     </Head>
-     <main className='p-10'>
-       <h1 className='text-lg'>Next shop</h1>
-       <ul>
-         {products.map(product => (
-           <li key={product.id}>
-             <Link href={`/products/${product.id}`}>
-               <a>
-                 {product.title}
-               </a>
-             </Link>
-           </li>
-         ))}
-       </ul>
-     </main>
-   </>
+   <Page title='Indoor plants'>
+     <ul className='grid grid-cols-1 lg:grid-cols-3 gap-4'>
+       {products.map(product => (
+         <li key={product.id}>
+           <ProductCard product={product}/>
+         </li>
+       ))}
+     </ul>
+   </Page>
   )
 }
 

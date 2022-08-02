@@ -1,6 +1,7 @@
-import Head from 'next/head'
 import { getProduct, getProducts } from '../../lib/products'
 import { ApiError } from '../../lib/api'
+import Image from 'next/image'
+import Page from '../../components/Page'
 
 export const getStaticPaths = async () => {
   const products = await getProducts()
@@ -31,17 +32,21 @@ export const getStaticProps = async ({ params: { id }}) => {
 
 const ProductPage = ({ product }) => {
   return (
-    <>
-      <Head>
-        <title>Product</title>
-      </Head>
-      <main className='p-10'>
-        <h1 className='text-lg'>{product.title}</h1>
-        <p>
-          {product.description}
-        </p>
-      </main>
-    </>
+    <Page title={product.title}>
+      <div className='flex flex-col lg:flex-row'>
+        <div>
+          <Image src={product.pictureUrl} width={640} height={480} alt=''/>
+        </div>
+        <div className='flex-1 lg:ml-4'>
+          <p className='text-sm'>
+            {product.description}
+          </p>
+          <p className='text-lg font-bold mt-2'>
+            {product.price}
+          </p>
+        </div>
+      </div>
+    </Page>
   )
 }
 
