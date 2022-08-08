@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 import Page from '../components/Page'
 import Input from '../components/Input'
 import Field from '../components/Field'
@@ -6,6 +7,7 @@ import Button from '../components/Button'
 import { fetchJson } from '../lib/api'
 
 const SignIn = () => {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [status, setStatus] = useState({ loading: false, error: false })
@@ -14,7 +16,7 @@ const SignIn = () => {
     event.preventDefault()
     setStatus({ loading: true, error: false })
     try {
-      const response = await fetchJson('/api/login', {
+      await fetchJson('/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -22,6 +24,7 @@ const SignIn = () => {
         body: JSON.stringify({ email, password })
       })
       setStatus({ loading: false, error: false })
+      router.push('/')
     } catch (e) {
       setStatus({ loading: false, error: true })
     }

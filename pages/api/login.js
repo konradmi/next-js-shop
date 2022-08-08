@@ -10,7 +10,7 @@ const handler = async (req, res) => {
   }
   const { email, password } = req.body
   try {
-    const { jwt, user } = await fetchJson(`${CMS_URL }/auth/local`, {
+    const { jwt, user } = await fetchJson(`${CMS_URL}/auth/local`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
