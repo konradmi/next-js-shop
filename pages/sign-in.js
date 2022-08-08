@@ -3,14 +3,28 @@ import Page from '../components/Page'
 import Input from '../components/Input'
 import Field from '../components/Field'
 import Button from '../components/Button'
+import { fetchJson } from '../lib/api'
 
 const SignIn = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [status, setStatus] = useState({ loading: false, error: false })
 
-  const handleSubmit = () => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    console .log('should submit:', email, password)
+    setStatus({ loading: true, error: false })
+    try {
+      const response = await fetchJson('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password })
+      })
+      setStatus({ loading: false, error: false })
+    } catch (e) {
+      setStatus({ loading: false, error: true })
+    }
   }
 
   return (
@@ -22,9 +36,18 @@ const SignIn = () => {
         <Field label='Password'>
           <Input required type='password' value={password} onChange={setPassword}/>
         </Field>
-        <Button type='submit'>
-          Sing in
-        </Button>
+        {
+          status.error && <p className='text-red-700'>Invalid credentials</p>
+        }
+        {
+          status.loading
+            ? <p>Loading....</p>
+            : (
+              <Button type='submit'>
+                Sing in
+              </Button>
+            )
+        }
       </form>
     </Page>
   )
