@@ -1,23 +1,12 @@
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { fetchJson } from '../lib/api'
+import { useUser } from '../hooks/user'
 
 const NavBar = () => {
-  const [user, setUser] = useState()
-  useEffect(() => {
-    (async () => {
-      try {
-        const user = await fetchJson('/api/user')
-        setUser(user)
-      } catch (e) {
-        console.log('not signed in')
-      }
-    })()
-  }, [])
+  const user = useUser()
 
   const handleSignOut = async () => {
     await fetchJson('/api/logout')
-    setUser(undefined)
   }
 
   return (
