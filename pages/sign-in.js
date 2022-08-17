@@ -4,30 +4,18 @@ import Page from '../components/Page'
 import Input from '../components/Input'
 import Field from '../components/Field'
 import Button from '../components/Button'
-import { fetchJson } from '../lib/api'
+import { useSignIn } from '../hooks/user'
 
 const SignIn = () => {
   const router = useRouter()
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState ('')
   const [password, setPassword] = useState('')
-  const [status, setStatus] = useState({ loading: false, error: false })
+  const { signIn, signInError,  signInLoading } = useSignIn()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    setStatus({ loading: true, error: false })
-    try {
-      await fetchJson('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password })
-      })
-      setStatus({ loading: false, error: false })
-      router.push('/')
-    } catch (e) {
-      setStatus({ loading: false, error: true })
-    }
+    const valid = await signIn(email, password)
+    if(valid)  router.push('/')
   }
 
   return (
@@ -40,10 +28,10 @@ const SignIn = () => {
           <Input required type='password' value={password} onChange={setPassword}/>
         </Field>
         {
-          status.error && <p className='text-red-700'>Invalid credentials</p>
+          signInError && <p className='text-red-700'>Invalid credentials</p>
         }
         {
-          status.loading
+          signInLoading
             ? <p>Loading....</p>
             : (
               <Button type='submit'>
